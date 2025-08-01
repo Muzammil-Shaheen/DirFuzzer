@@ -4,7 +4,7 @@ DirFuzzer is a high-speed directory brute-forcing tool designed for ethical hack
 
 ---
 
-##Features
+Features
 
 - Multi-threaded directory and file fuzzing
 - Live progress bar
