@@ -18,5 +18,6 @@ Features
 
 ##Usage
 
-```bash
+Example Cmd
+
 python3 dirfuzzer.py -u http://example.com -w wordlist.txt -x .php,.html --status 200 403
