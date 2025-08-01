@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import requests
 import argparse
 import concurrent.futures
@@ -10,40 +8,31 @@ from pyfiglet import Figlet
 
 init(autoreset=True)
 
-# Create the "DRF" ASCII banner
 f = Figlet(font='big')
 banner_lines = f.renderText("DRFZ").splitlines()
 
-# Info lines below the banner
 info_lines = [
     "DirFuzzer by Shaheen",
     "Fast & Accurate Directory Fuzzer | v1.0"
 ]
 
-# Calculate max width for border
 max_width = max(
     max(len(line) for line in banner_lines),
     max(len(line) for line in info_lines)
-) + 4  # padding
+) + 4 
 
-# Top border
 print(Fore.RED + "\033[1m" + "╔" + "═" * max_width + "╗")
 
-# Banner lines
 for line in banner_lines:
     print("║ " + line.ljust(max_width - 2) + " ║")
 
-# Separator line
 print("╟" + "─" * max_width + "╢")
 
-# Info lines
 for line in info_lines:
     print("║ " + line.center(max_width - 2) + " ║")
 
-# Bottom border
 print("╚" + "═" * max_width + "╝" + "\033[0m\n")
 
-# Argument Parsing
 parser = argparse.ArgumentParser(description="Blazing Fast Directory Fuzzer")
 parser.add_argument("-u", "--url", required=True, help="Target URL (e.g. https://example.com/)")
 parser.add_argument("-w", "--wordlist", required=True, help="Path to wordlist")
@@ -59,13 +48,11 @@ args = parser.parse_args()
 args.extensions = args.extensions.split(",")
 headers = {"User-Agent": args.ua}
 
-# Load wordlist
 with open(args.wordlist, "r") as f:
     words = [line.strip() for line in f if line.strip()]
     if args.limit:
         words = words[:args.limit]
 
-# Build URL queue
 url_queue = Queue()
 for word in words:
     for ext in args.extensions:
@@ -74,7 +61,6 @@ for word in words:
 
 progress = tqdm(total=url_queue.qsize(), desc="Fuzzing", ncols=80)
 
-# Request function
 def fetch_url(url):
     try:
         r = requests.get(url, headers=headers, timeout=args.timeout, allow_redirects=False)
@@ -90,7 +76,6 @@ def fetch_url(url):
     finally:
         progress.update(1)
 
-# Threaded Execution
 with concurrent.futures.ThreadPoolExecutor(max_workers=args.threads) as executor:
     while not url_queue.empty():
         url = url_queue.get()
